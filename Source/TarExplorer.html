@@ -1,0 +1,196 @@
+<html>
+<body>
+
+<div id="divUI">
+
+	<label><b>TAR File Explorer</b></label><br />
+	
+	<p>Upload a TAR File to view and modify its contents.</p>
+
+	<label>TAR File to Load:</label>
+	<input id="inputTarFileToLoad" type="file" onchange="inputTarFileToLoad_Change(event);"/>
+	<br />
+
+	<div id="divTarFile"></div>
+	<br />
+
+	<label>File to Add to TAR:</label>
+	<input id="inputFileToAddToTar" type="file" />
+	<label>Directory to Add File to:</label>
+	<select id="selectDirectoryToAddFileTo"></select>
+	<button id="buttonAddFileToTar" onclick="buttonAddFileToTar_Clicked(event);">Add File</button>
+	<br />
+
+	<label>Directory to Add to TAR:</label>
+	<input id="inputDirectoryToAddToTar" />	
+	<button id="buttonAddDirectoryToTar" onclick="buttonAddDirectoryToTar_Clicked();">Add Directory</button>
+	<br />
+
+	<label>Filename to Download TAR As:</label>
+	<input id="inputFileNameToSaveAs" value="Out.tar"></input>
+	<button id="buttonSaveAsTar" onclick="buttonSaveAsTar_Clicked();">Download TAR</button>
+	<br />
+
+</div>
+
+<script type="text/javascript">
+
+// ui event handlers
+
+function buttonAddDirectoryToTar_Clicked()
+{
+	var inputDirectoryToAddToTar = document.getElementById("inputDirectoryToAddToTar");
+	var directoryToAddToTar = inputDirectoryToAddToTar.value;
+	if (directoryToAddToTar != "")
+	{
+		var delimiter = "/";
+		if (directoryToAddToTar.lastIndexOf(delimiter) < directoryToAddToTar.length - 1)
+		{
+			directoryToAddToTar += delimiter;
+		}
+
+		var entryForDirectory = new TarFileEntry.directory(directoryToAddToTar);
+
+		var tarFile = Globals.Instance.tarFile;
+
+		tarFile.entries.push(entryForDirectory);
+	}
+
+	divTarFileRefresh();
+}
+
+function buttonAddFileToTar_Clicked()
+{
+	var inputFileToAddToTar = document.getElementById("inputFileToAddToTar");
+	var fileToLoad = inputFileToAddToTar.files[0];
+	if (fileToLoad != null)
+	{
+		FileHelper.loadFileAsBytes
+		(
+			fileToLoad,
+			buttonAddFileToTar_Clicked2 // callback
+		);
+	}
+}
+
+function buttonAddFileToTar_Clicked2(fileToAddName, fileToAddAsBytes)
+{
+	var selectDirectoryToAddFileTo = document.getElementById("selectDirectoryToAddFileTo");
+	var directoryToAddFileTo = selectDirectoryToAddFileTo.selectedOptions[0].text;
+	if (directoryToAddFileTo == "[root]")
+	{
+		directoryToAddFileTo = "";
+	}
+
+	var tarFile = Globals.Instance.tarFile;
+
+	var headerToClone = tarFile.entries[0].header;
+
+	var tarFileEntryHeader = new TarFileEntryHeader
+	(
+		fileToAddName,
+		headerToClone.fileMode,
+		headerToClone.userIDOfOwner,
+		headerToClone.userIDOfGroup,
+		fileToAddAsBytes.length, // fileSizeInBytes,
+		headerToClone.timeModifiedInUnixFormat, // todo
+		0, // checksum,
+		TarFileTypeFlag.Instances.Normal,
+		headerToClone.nameOfLinkedFile,
+		headerToClone.uStarIndicator,
+		headerToClone.uStarVersion,
+		headerToClone.userNameOfOwner,
+		headerToClone.groupNameOfOwner,
+		headerToClone.deviceNumberMajor,
+		headerToClone.deviceNumberMinor,
+		headerToClone.filenamePrefix
+	);
+
+	tarFileEntryHeader.checksumCalculate();
+
+	var entryForFileToAdd = new TarFileEntry
+	(
+		tarFileEntryHeader,
+		fileToAddAsBytes
+	);
+
+	tarFile.entries.push(entryForFileToAdd);
+	
+	divTarFileRefresh();
+}
+
+function buttonSaveAsTar_Clicked()
+{
+	var tarFileToSave = Globals.Instance.tarFile;
+	var inputFileNameToSaveAs = document.getElementById("inputFileNameToSaveAs");
+	var fileNameToSaveAs = inputFileNameToSaveAs.value;
+	tarFileToSave.downloadAs(fileNameToSaveAs);
+}
+
+function inputTarFileToLoad_Change(event)
+{
+	var fileToLoad = event.srcElement.files[0];
+	if (fileToLoad != null)
+	{
+		FileHelper.loadFileAsBytes
+		(
+			fileToLoad,
+			inputTarFileToLoad_Change2 // callback
+		);
+	}
+}
+
+function inputTarFileToLoad_Change2(fileName, fileAsBytes)
+{
+	var tarFile = TarFile.fromBytes(fileName, fileAsBytes);
+	
+	Globals.Instance.tarFile = tarFile;
+
+	divTarFileRefresh();
+}
+
+function divTarFileRefresh()
+{
+	var tarFile = Globals.Instance.tarFile;
+	var tarFileAsDOMElement = DOMDisplayHelper.tarFileToDOMElement(tarFile);
+	var divTarFile = document.getElementById("divTarFile");
+	divTarFile.innerHTML = "";
+	divTarFile.appendChild(tarFileAsDOMElement);
+
+	var selectDirectoryToAddFileTo = document.getElementById
+	(
+		"selectDirectoryToAddFileTo"
+	);
+	selectDirectoryToAddFileTo.innerHTML = "";
+
+	var optionRoot = document.createElement("option");
+	optionRoot.innerHTML = "[root]";
+	selectDirectoryToAddFileTo.appendChild(optionRoot);
+
+	var entriesForDirectories = tarFile.entriesForDirectories();
+	for (var i = 0; i < entriesForDirectories.length; i++)
+	{
+		var entry = entriesForDirectories[i];
+		var option = document.createElement("option");
+		option.innerHTML = entry.header.fileName;
+		selectDirectoryToAddFileTo.appendChild(option);
+	}
+}
+
+</script>
+
+<script type="text/javascript" src="ArrayExtensions.js"></script>
+<script type="text/javascript" src="StringExtensions.js"></script>
+
+<script type="text/javascript" src="ByteHelper.js"></script>
+<script type="text/javascript" src="ByteStream.js"></script>
+<script type="text/javascript" src="DOMDisplayHelper.js"></script>
+<script type="text/javascript" src="FileHelper.js"></script>
+<script type="text/javascript" src="Globals.js"></script>
+<script type="text/javascript" src="TarFile.js"></script>
+<script type="text/javascript" src="TarFileEntry.js"></script>
+<script type="text/javascript" src="TarFileEntryHeader.js"></script>
+<script type="text/javascript" src="TarFileTypeFlag.js"></script>
+
+</body>
+</html>
