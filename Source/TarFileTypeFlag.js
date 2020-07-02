@@ -1,14 +1,27 @@
 
-function TarFileTypeFlag(value, name)
+class TarFileTypeFlag
 {
-	this.value = value;
-	this.id = "_" + this.value;
-	this.name = name;
-}
-{
-	TarFileTypeFlag.Instances = new TarFileTypeFlag_Instances();
+	constructor(value, name)
+	{
+		this.value = value;
+		this.id = "_" + this.value;
+		this.name = name;
+	}
 
-	function TarFileTypeFlag_Instances()
+	static _instances;
+	static Instances()
+	{
+		if (TarFileTypeFlag._instances == null)
+		{
+			TarFileTypeFlag._instances = new TarFileTypeFlag_Instances();
+		}
+		return TarFileTypeFlag._instances;
+	}
+}
+
+class TarFileTypeFlag_Instances
+{
+	constructor()
 	{
 		this.Normal 		= new TarFileTypeFlag("0", "Normal");
 		this.HardLink 		= new TarFileTypeFlag("1", "Hard Link");
@@ -22,10 +35,10 @@ function TarFileTypeFlag(value, name)
 		// Additional types not implemented:
 		// 'g' - global extended header with meta data (POSIX.1-2001)
 		// 'x' - extended header with meta data for the next file in the archive (POSIX.1-2001)
-		// 'A'ý'Z' - Vendor specific extensions (POSIX.1-1988)
+		// 'A'-'Z' - Vendor specific extensions (POSIX.1-1988)
 		// [other values] - reserved for future standardization
 
-		this._All = 
+		this._All =
 		[
 			this.Normal,
 			this.HardLink,

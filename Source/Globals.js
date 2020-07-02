@@ -1,9 +1,5 @@
 
-function Globals()
+class Globals
 {
-	// do nothing
-}
-
-{
-	Globals.Instance = new Globals();
+	static Instance = new Globals();
 }

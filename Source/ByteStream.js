@@ -1,26 +1,27 @@
 
-function ByteStream(bytes)
+class ByteStream
 {
-	this.bytes = bytes;  
+	constructor(bytes)
+	{
+		this.bytes = bytes;
 
-	this.byteIndexCurrent = 0;
-}
+		this.byteIndexCurrent = 0;
+	}
 
-{
 	// constants
 
-	ByteStream.BitsPerByte = 8;
-	ByteStream.BitsPerByteTimesTwo = ByteStream.BitsPerByte * 2;
-	ByteStream.BitsPerByteTimesThree = ByteStream.BitsPerByte * 3;
+	static BitsPerByte = 8;
+	static BitsPerByteTimesTwo = ByteStream.BitsPerByte * 2;
+	static BitsPerByteTimesThree = ByteStream.BitsPerByte * 3;
 
 	// instance methods
 
-	ByteStream.prototype.hasMoreBytes = function()
+	hasMoreBytes()
 	{
 		return (this.byteIndexCurrent < this.bytes.length);
 	}
 
-	ByteStream.prototype.readBytes = function(numberOfBytesToRead)
+	readBytes(numberOfBytesToRead)
 	{
 		var returnValue = [];
 
@@ -32,7 +33,7 @@ function ByteStream(bytes)
 		return returnValue;
 	}
 
-	ByteStream.prototype.readByte = function()
+	readByte()
 	{
 		var returnValue = this.bytes[this.byteIndexCurrent];
 
@@ -41,7 +42,7 @@ function ByteStream(bytes)
 		return returnValue;
 	}
 
-	ByteStream.prototype.readString = function(lengthOfString)
+	readString(lengthOfString)
 	{
 		var returnValue = "";
 
@@ -59,7 +60,7 @@ function ByteStream(bytes)
 		return returnValue;
 	}
 
-	ByteStream.prototype.writeBytes = function(bytesToWrite)
+	writeBytes(bytesToWrite)
 	{
 		for (var b = 0; b < bytesToWrite.length; b++)
 		{
@@ -69,14 +70,14 @@ function ByteStream(bytes)
 		this.byteIndexCurrent = this.bytes.length;
 	}
 
-	ByteStream.prototype.writeByte = function(byteToWrite)
+	writeByte(byteToWrite)
 	{
 		this.bytes.push(byteToWrite);
 
 		this.byteIndexCurrent++;
 	}
 
-	ByteStream.prototype.writeString = function(stringToWrite, lengthPadded)
+	writeString(stringToWrite, lengthPadded)
 	{
 		for (var i = 0; i < stringToWrite.length; i++)
 		{

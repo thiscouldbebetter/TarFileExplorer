@@ -4,10 +4,12 @@
 <div id="divUI">
 
 	<label><b>TAR File Explorer</b></label><br />
-	
+
 	<p>Upload a TAR File to view and modify its contents.</p>
 
-	<label>TAR File to Load:</label>
+	<label>TAR File:</label>
+	<button onclick="buttonNew_Clicked();">New</button>
+	<label>Load:</label>
 	<input id="inputTarFileToLoad" type="file" onchange="inputTarFileToLoad_Change(event);"/>
 	<br />
 
@@ -22,7 +24,7 @@
 	<br />
 
 	<label>Directory to Add to TAR:</label>
-	<input id="inputDirectoryToAddToTar" />	
+	<input id="inputDirectoryToAddToTar" />
 	<button id="buttonAddDirectoryToTar" onclick="buttonAddDirectoryToTar_Clicked();">Add Directory</button>
 	<br />
 
@@ -49,7 +51,7 @@ function buttonAddDirectoryToTar_Clicked()
 			directoryToAddToTar += delimiter;
 		}
 
-		var entryForDirectory = new TarFileEntry.directory(directoryToAddToTar);
+		var entryForDirectory = TarFileEntry.directoryNew(directoryToAddToTar);
 
 		var tarFile = Globals.Instance.tarFile;
 
@@ -95,7 +97,7 @@ function buttonAddFileToTar_Clicked2(fileToAddName, fileToAddAsBytes)
 		fileToAddAsBytes.length, // fileSizeInBytes,
 		headerToClone.timeModifiedInUnixFormat, // todo
 		0, // checksum,
-		TarFileTypeFlag.Instances.Normal,
+		TarFileTypeFlag.Instances().Normal,
 		headerToClone.nameOfLinkedFile,
 		headerToClone.uStarIndicator,
 		headerToClone.uStarVersion,
@@ -115,7 +117,13 @@ function buttonAddFileToTar_Clicked2(fileToAddName, fileToAddAsBytes)
 	);
 
 	tarFile.entries.push(entryForFileToAdd);
-	
+
+	divTarFileRefresh();
+}
+
+function buttonNew_Clicked()
+{
+	Globals.Instance.tarFile = TarFile.create("[new]");
 	divTarFileRefresh();
 }
 
@@ -143,7 +151,7 @@ function inputTarFileToLoad_Change(event)
 function inputTarFileToLoad_Change2(fileName, fileAsBytes)
 {
 	var tarFile = TarFile.fromBytes(fileName, fileAsBytes);
-	
+
 	Globals.Instance.tarFile = tarFile;
 
 	divTarFileRefresh();

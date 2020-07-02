@@ -1,18 +1,19 @@
 
-function TarFile(fileName, entries)
+class TarFile
 {
-	this.fileName = fileName;
-	this.entries = entries;
-}
+	constructor(fileName, entries)
+	{
+		this.fileName = fileName;
+		this.entries = entries;
+	}
 
-{
 	// constants
 
-	TarFile.ChunkSize = 512;
+	static ChunkSize = 512;
 
 	// static methods
 
-	TarFile.fromBytes = function(fileName, bytes)
+	static fromBytes(fileName, bytes)
 	{
 		var reader = new ByteStream(bytes);
 
@@ -65,7 +66,7 @@ function TarFile(fileName, entries)
 		return returnValue;
 	}
 
-	TarFile.new = function(fileName)
+	static create(fileName)
 	{
 		return new TarFile
 		(
@@ -76,27 +77,16 @@ function TarFile(fileName, entries)
 
 	// instance methods
 
-	TarFile.prototype.downloadAs = function(fileNameToSaveAs)
+	downloadAs(fileNameToSaveAs)
 	{
-		this.entriesAllChecksumsCalculate();
-		
 		FileHelper.saveBytesAsFile
 		(
 			this.toBytes(),
 			fileNameToSaveAs
 		)
 	}
-	
-	TarFile.prototype.entriesAllChecksumsCalculate = function()
-	{
-		for (var i = 0; i < this.entries.length; i++)
-		{
-			var entry = this.entries[i];
-			entry.header.checksumCalculate();
-		}
-	}
 
-	TarFile.prototype.entriesForDirectories = function()
+	entriesForDirectories()
 	{
 		var returnValues = [];
 
@@ -112,7 +102,7 @@ function TarFile(fileName, entries)
 		return returnValues;
 	}
 
-	TarFile.prototype.toBytes = function()
+	toBytes()
 	{
 		var fileAsBytes = [];
 
@@ -149,7 +139,7 @@ function TarFile(fileName, entries)
 
 	// strings
 
-	TarFile.prototype.toString = function()
+	toString()
 	{
 		var newline = "\n";
 

@@ -1,16 +1,12 @@
 
-function DOMDisplayHelper()
+class DOMDisplayHelper
 {
-	// static class
-}
-
-{
-	DOMDisplayHelper.tarFileEntryToDOMElement = function(tarFileEntry)
+	static tarFileEntryToDOMElement(tarFileEntry)
 	{
 		var returnValue = document.createElement("tr");
 
 		var header = tarFileEntry.header;
-		
+
 		var td = document.createElement("td");
 		td.innerHTML = header.fileName;
 		returnValue.appendChild(td);
@@ -34,11 +30,11 @@ function DOMDisplayHelper()
 		}
 
 		returnValue.appendChild(td);
-		
+
 		var td = document.createElement("td");
 		var buttonDelete = document.createElement("button");
 		buttonDelete.innerHTML = "Delete";
-		buttonDelete.onclick = function()
+		buttonDelete.onclick = () =>
 		{
 			var tarFile = Globals.Instance.tarFile;
 			tarFile.entries.remove(tarFileEntry);
@@ -50,8 +46,8 @@ function DOMDisplayHelper()
 
 		return returnValue;
 	}
-	
-	DOMDisplayHelper.tarFileToDOMElement = function(tarFile)
+
+	static tarFileToDOMElement(tarFile)
 	{
 		var returnValue = document.createElement("div");
 
@@ -92,5 +88,5 @@ function DOMDisplayHelper()
 
 		return returnValue;
 	}
-	
+
 }
