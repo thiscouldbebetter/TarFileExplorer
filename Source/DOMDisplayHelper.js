@@ -3,27 +3,32 @@ class DOMDisplayHelper
 {
 	static tarFileEntryToDOMElement(tarFileEntry)
 	{
-		var returnValue = document.createElement("tr");
+		var d = document;
+
+		var returnValue = d.createElement("tr");
 
 		var header = tarFileEntry.header;
 
-		var td = document.createElement("td");
+		var td = d.createElement("td");
+		td.style = "word-break: break-all";
 		td.innerHTML = header.fileName;
 		returnValue.appendChild(td);
 
-		var td = document.createElement("td");
+		var td = d.createElement("td");
 		td.innerHTML = header.typeFlag.name;
 		returnValue.appendChild(td);
 
-		var td = document.createElement("td");
+		var td = d.createElement("td");
 		td.innerHTML = header.fileSizeInBytes;
 		returnValue.appendChild(td);
 
-		var td = document.createElement("td");
+		var td = d.createElement("td");
 
-		if (header.typeFlag.name == "Normal")
+		var headerTypeFlagName = header.typeFlag.name;
+		var tarFileTypeFlags = TarFileTypeFlag.Instances();
+		if (headerTypeFlagName == tarFileTypeFlags.Normal)
 		{
-			var buttonDownload = document.createElement("button");
+			var buttonDownload = d.createElement("button");
 			buttonDownload.innerHTML = "Download";
 			buttonDownload.onclick = tarFileEntry.download.bind(tarFileEntry);
 			td.appendChild(buttonDownload);
@@ -31,8 +36,8 @@ class DOMDisplayHelper
 
 		returnValue.appendChild(td);
 
-		var td = document.createElement("td");
-		var buttonDelete = document.createElement("button");
+		var td = d.createElement("td");
+		var buttonDelete = d.createElement("button");
 		buttonDelete.innerHTML = "Delete";
 		buttonDelete.onclick = () =>
 		{
@@ -49,28 +54,29 @@ class DOMDisplayHelper
 
 	static tarFileToDOMElement(tarFile)
 	{
-		var returnValue = document.createElement("div");
+		var d = document;
+		var returnValue = d.createElement("div");
 
-		var pFileName = document.createElement("p");
+		var pFileName = d.createElement("p");
 		pFileName.innerHTML = tarFile.fileName;
 		returnValue.appendChild(pFileName);
 
-		var tableEntries = document.createElement("table");
+		var tableEntries = d.createElement("table");
 		tableEntries.style.border = "1px solid";
 
-		var thead = document.createElement("thead");
+		var thead = d.createElement("thead");
 
-		var th = document.createElement("th");
+		var th = d.createElement("th");
 		th.innerHTML = "File Name";
 		th.style.border = "1px solid";
 		thead.appendChild(th);
 
-		var th = document.createElement("th");
+		var th = d.createElement("th");
 		th.innerHTML = "Type";
 		th.style.border = "1px solid";
 		thead.appendChild(th);
 
-		th = document.createElement("th");
+		th = d.createElement("th");
 		th.innerHTML = "Size in Bytes";
 		th.style.border = "1px solid";
 		thead.appendChild(th);

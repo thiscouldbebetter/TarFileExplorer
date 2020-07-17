@@ -29,8 +29,10 @@ class TarFileTypeFlag_Instances
 		this.CharacterSpecial 	= new TarFileTypeFlag("3", "Character Special");
 		this.BlockSpecial 	= new TarFileTypeFlag("4", "Block Special");
 		this.Directory		= new TarFileTypeFlag("5", "Directory");
-		this.FIFO		= new TarFileTypeFlag("6", "FIFO");
-		this.ContiguousFile 	= new TarFileTypeFlag("7", "Contiguous File");
+		this.FIFO			= new TarFileTypeFlag("6", "FIFO");
+		this.ContiguousFile = new TarFileTypeFlag("7", "Contiguous File");
+
+		this.LongFilePath 	= new TarFileTypeFlag("L", "././@LongLink");
 
 		// Additional types not implemented:
 		// 'g' - global extended header with meta data (POSIX.1-2001)
@@ -48,6 +50,7 @@ class TarFileTypeFlag_Instances
 			this.Directory,
 			this.FIFO,
 			this.ContiguousFile,
+			this.LongFilePath,
 		];
 
 		for (var i = 0; i < this._All.length; i++)

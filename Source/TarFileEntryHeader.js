@@ -39,6 +39,7 @@ class TarFileEntryHeader
 		this.filenamePrefix = filenamePrefix;
 	}
 
+	static FileNameMaxLength = 99;
 	static SizeInBytes = 500;
 
 	// static methods
@@ -53,7 +54,7 @@ class TarFileEntryHeader
 			millisecondsSinceUnixEpoch / 1000
 		);
 		var secondsSinceUnixEpochAsStringOctal =
-			secondsSinceUnixEpoch.toString(8).padRight(12, " ");
+			secondsSinceUnixEpoch.toString(8).padRight(12, "\0");
 		var timeModifiedInUnixFormat = [];
 		for (var i = 0; i < secondsSinceUnixEpochAsStringOctal.length; i++)
 		{
@@ -65,21 +66,21 @@ class TarFileEntryHeader
 		var returnValue = new TarFileEntryHeader
 		(
 			"".padRight(100, "\0"), // fileName
-			"100777 \0", // fileMode
-			"0 \0".padLeft(8, " "), // userIDOfOwner
-			"0 \0".padLeft(8, " "), // userIDOfGroup
+			"0100777", // fileMode
+			"0000000", // userIDOfOwner
+			"0000000", // userIDOfGroup
 			0, // fileSizeInBytes
 			timeModifiedInUnixFormat,
 			0, // checksum
 			TarFileTypeFlag.Instances().Normal,
-			"".padRight(100, "\0"), // nameOfLinkedFile,
-			"".padRight(6, "\0"), // uStarIndicator,
-			"".padRight(2, "\0"), // uStarVersion,
-			"".padRight(32, "\0"), // userNameOfOwner,
-			"".padRight(32, "\0"), // groupNameOfOwner,
-			"".padRight(8, "\0"), // deviceNumberMajor,
-			"".padRight(8, "\0"), // deviceNumberMinor,
-			"".padRight(155, "\0") // filenamePrefix
+			"", // nameOfLinkedFile,
+			"ustar", // uStarIndicator,
+			"00", // uStarVersion,
+			"", // userNameOfOwner,
+			"", // groupNameOfOwner,
+			"", // deviceNumberMajor,
+			"", // deviceNumberMinor,
+			"" // filenamePrefix
 		);
 
 		return returnValue;
@@ -204,8 +205,8 @@ class TarFileEntryHeader
 		var headerAsBytes = [];
 		var writer = new ByteStream(headerAsBytes);
 
-		var fileSizeInBytesAsStringOctal = (this.fileSizeInBytes.toString(8) + " ").padLeft(12, " ")
-		var checksumAsStringOctal = (this.checksum.toString(8) + " \0").padLeft(8, " ");
+		var fileSizeInBytesAsStringOctal = (this.fileSizeInBytes.toString(8) + "\0").padLeft(12, "0")
+		var checksumAsStringOctal = (this.checksum.toString(8) + "\0 ").padLeft(8, "0");
 
 		writer.writeString(this.fileName, 100);
 		writer.writeString(this.fileMode, 8);
