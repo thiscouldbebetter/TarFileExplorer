@@ -23,7 +23,7 @@ class ByteStream
 
 	readBytes(numberOfBytesToRead)
 	{
-		var returnValue = [];
+		var returnValue = new Array(numberOfBytesToRead);
 
 		for (var b = 0; b < numberOfBytesToRead; b++)
 		{

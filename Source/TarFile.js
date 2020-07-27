@@ -91,6 +91,9 @@ class TarFile
 					(a, b) => a += String.fromCharCode(b),
 					""
 				);
+				//Drop all null terminating character
+				entryNext.header.fileName = entryNext.header.fileName.replace(/\0/g, "");
+				
 				entries.splice(i, 1);
 				i--;
 			}
