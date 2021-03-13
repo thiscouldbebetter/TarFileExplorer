@@ -3,9 +3,11 @@ var ThisCouldBeBetter;
 (function (ThisCouldBeBetter) {
     var TarFileExplorer;
     (function (TarFileExplorer) {
-        class Globals {
+        class ArrayHelper {
+            static removeElementFromArray(elementToRemove, array) {
+                array.splice(array.indexOf(elementToRemove), 1);
+            }
         }
-        Globals.Instance = new Globals();
-        TarFileExplorer.Globals = Globals;
+        TarFileExplorer.ArrayHelper = ArrayHelper;
     })(TarFileExplorer = ThisCouldBeBetter.TarFileExplorer || (ThisCouldBeBetter.TarFileExplorer = {}));
 })(ThisCouldBeBetter || (ThisCouldBeBetter = {}));
