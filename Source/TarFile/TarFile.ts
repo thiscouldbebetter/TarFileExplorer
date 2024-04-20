@@ -109,9 +109,11 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		downloadAs(fileNameToSaveAs: string): void
 		{
+			var thisAsBytes = this.toBytes();
+
 			FileHelper.saveBytesAsFile
 			(
-				this.toBytes(),
+				thisAsBytes,
 				fileNameToSaveAs
 			)
 		}

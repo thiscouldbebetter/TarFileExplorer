@@ -10,38 +10,52 @@ var TarFileTypeFlag = tarFileExplorer.TarFileTypeFlag;
 
 function buttonAddDirectoryToTar_Clicked()
 {
-	var inputDirectoryToAddToTar =
-		document.getElementById("inputDirectoryToAddToTar");
-	var directoryToAddToTar = inputDirectoryToAddToTar.value;
-	if (directoryToAddToTar != "")
+	var tarFile = globals.tarFile;
+	if (tarFile == null)
 	{
-		var delimiter = "/";
-		if (directoryToAddToTar.lastIndexOf(delimiter) < directoryToAddToTar.length - 1)
+		alert("No TAR file created or loaded yet!");
+	}
+	else
+	{
+		var inputDirectoryToAddToTar =
+			document.getElementById("inputDirectoryToAddToTar");
+		var directoryToAddToTar = inputDirectoryToAddToTar.value;
+		if (directoryToAddToTar != "")
 		{
-			directoryToAddToTar += delimiter;
+			var delimiter = "/";
+			if (directoryToAddToTar.lastIndexOf(delimiter) < directoryToAddToTar.length - 1)
+			{
+				directoryToAddToTar += delimiter;
+			}
+
+			var entryForDirectory = TarFileEntry.directoryNew(directoryToAddToTar);
+
+			tarFile.entries.push(entryForDirectory);
 		}
 
-		var entryForDirectory = TarFileEntry.directoryNew(directoryToAddToTar);
-
-		var tarFile = globals.tarFile;
-
-		tarFile.entries.push(entryForDirectory);
+		DOMDisplayHelper.divTarFileRefresh();
 	}
-
-	DOMDisplayHelper.divTarFileRefresh();
 }
 
 function buttonAddFileToTar_Clicked()
 {
-	var inputFileToAddToTar = document.getElementById("inputFileToAddToTar");
-	var fileToLoad = inputFileToAddToTar.files[0];
-	if (fileToLoad != null)
+	var tarFile = globals.tarFile;
+	if (tarFile == null)
 	{
-		FileHelper.loadFileAsBytes
-		(
-			fileToLoad,
-			buttonAddFileToTar_Clicked2 // callback
-		);
+		alert("No TAR file created or loaded yet!");
+	}
+	else
+	{
+		var inputFileToAddToTar = document.getElementById("inputFileToAddToTar");
+		var fileToLoad = inputFileToAddToTar.files[0];
+		if (fileToLoad != null)
+		{
+			FileHelper.loadFileAsBytes
+			(
+				fileToLoad,
+				buttonAddFileToTar_Clicked2 // callback
+			);
+		}
 	}
 }
 
@@ -107,9 +121,17 @@ function buttonNew_Clicked()
 function buttonSaveAsTar_Clicked()
 {
 	var tarFileToSave = globals.tarFile;
-	var inputFileNameToSaveAs = document.getElementById("inputFileNameToSaveAs");
-	var fileNameToSaveAs = inputFileNameToSaveAs.value;
-	tarFileToSave.downloadAs(fileNameToSaveAs);
+	if (tarFileToSave == null)
+	{
+		alert("No TAR file created or loaded yet!");
+	}
+	else
+	{
+		var inputFileNameToSaveAs =
+			document.getElementById("inputFileNameToSaveAs");
+		var fileNameToSaveAs = inputFileNameToSaveAs.value;
+		tarFileToSave.downloadAs(fileNameToSaveAs);
+	}
 }
 
 function inputTarFileToLoad_Change(event)

@@ -62,7 +62,8 @@ var ThisCouldBeBetter;
                 this.downloadAs(this.fileName);
             }
             downloadAs(fileNameToSaveAs) {
-                TarFileExplorer.FileHelper.saveBytesAsFile(this.toBytes(), fileNameToSaveAs);
+                var thisAsBytes = this.toBytes();
+                TarFileExplorer.FileHelper.saveBytesAsFile(thisAsBytes, fileNameToSaveAs);
             }
             entriesForDirectories() {
                 return this.entries.filter(x => x.header.typeFlag.name == TarFileExplorer.TarFileTypeFlag.Instances().Directory.name);
