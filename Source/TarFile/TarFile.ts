@@ -102,6 +102,11 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			}
 		}
 
+		download(): void
+		{
+			this.downloadAs(this.fileName);
+		}
+
 		downloadAs(fileNameToSaveAs: string): void
 		{
 			FileHelper.saveBytesAsFile

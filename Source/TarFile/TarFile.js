@@ -58,6 +58,9 @@ var ThisCouldBeBetter;
                     }
                 }
             }
+            download() {
+                this.downloadAs(this.fileName);
+            }
             downloadAs(fileNameToSaveAs) {
                 TarFileExplorer.FileHelper.saveBytesAsFile(this.toBytes(), fileNameToSaveAs);
             }
