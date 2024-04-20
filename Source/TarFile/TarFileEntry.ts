@@ -92,7 +92,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		// instance methods
 
-		download(event: any)
+		download(event: any): void
 		{
 			FileHelper.saveBytesAsFile
 			(
@@ -101,7 +101,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			);
 		}
 
-		remove(event: any)
+		remove(event: any): void
 		{
 			alert("Not yet implemented!"); // todo
 		}

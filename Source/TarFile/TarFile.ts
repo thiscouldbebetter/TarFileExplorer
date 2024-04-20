@@ -79,7 +79,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		// instance methods
 
-		consolidateLongPathEntries()
+		consolidateLongPathEntries(): void
 		{
 			// TAR file entries with paths longer than 99 chars require cheating,
 			// by prepending them with a entry of type "L" whose data contains the path.
@@ -102,7 +102,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			}
 		}
 
-		downloadAs(fileNameToSaveAs: string)
+		downloadAs(fileNameToSaveAs: string): void
 		{
 			FileHelper.saveBytesAsFile
 			(
@@ -111,7 +111,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			)
 		}
 
-		entriesForDirectories()
+		entriesForDirectories(): TarFileEntry[]
 		{
 			return this.entries.filter
 			(
@@ -119,7 +119,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			);
 		}
 
-		toBytes()
+		toBytes(): number[]
 		{
 			this.toBytes_PrependLongPathEntriesAsNeeded();
 
@@ -153,7 +153,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			return fileAsBytes;
 		}
 
-		toBytes_PrependLongPathEntriesAsNeeded()
+		toBytes_PrependLongPathEntriesAsNeeded(): void
 		{
 			// TAR file entries with paths longer than 99 chars require cheating,
 			// by prepending them with a entry of type "L" whose data contains the path.
