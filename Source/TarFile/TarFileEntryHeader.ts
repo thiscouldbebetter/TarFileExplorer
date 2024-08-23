@@ -72,10 +72,8 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			(
 				millisecondsSinceUnixEpoch / 1000
 			);
-			var secondsSinceUnixEpochAsStringOctal = StringHelper.padStringRightToLengthWithChar
-			(
-				secondsSinceUnixEpoch.toString(8), 12, "\0"
-			);
+			var secondsSinceUnixEpochAsStringOctal =
+				secondsSinceUnixEpoch.toString(8).padEnd(12, "\0");
 			var timeModifiedInUnixFormat = new Array<number>();
 			for (var i = 0; i < secondsSinceUnixEpochAsStringOctal.length; i++)
 			{
@@ -86,7 +84,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 			var returnValue = new TarFileEntryHeader
 			(
-				StringHelper.padStringRightToLengthWithChar("", 100, "\0"), // fileName
+				"".padEnd(100, "\0"), // fileName
 				"0100777", // fileMode
 				"0000000", // userIDOfOwner
 				"0000000", // userIDOfGroup
@@ -225,14 +223,11 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			var headerAsBytes = new Array<number>();
 			var writer = new ByteStream(headerAsBytes);
 
-			var fileSizeInBytesAsStringOctal = StringHelper.padStringLeftToLengthWithChar
-			(
-				this.fileSizeInBytes.toString(8) + "\0", 12, "0"
-			)
-			var checksumAsStringOctal = StringHelper.padStringLeftToLengthWithChar
-			(
-				this.checksum.toString(8) + "\0 ", 8, "0"
-			);
+			var fileSizeInBytesAsStringOctal =
+				(this.fileSizeInBytes.toString(8) + "\0").padStart(12, "0");
+
+			var checksumAsStringOctal =
+				(this.checksum.toString(8) + "\0").padStart(8, "0");
 
 			writer.writeString(this.fileName, 100);
 			writer.writeString(this.fileMode, 8);
@@ -252,7 +247,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			writer.writeString(this.filenamePrefix, 155);
 			writer.writeString
 			(
-				StringHelper.padStringRightToLengthWithChar("", 12, "\0"), 12
+				"".padEnd(12, "\0"), 12
 			); // reserved
 
 			return headerAsBytes;

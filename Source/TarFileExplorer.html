@@ -7,31 +7,53 @@
 
 	<p>Upload a TAR File to view and modify its contents.</p>
 
-	<label>TAR File:</label>
-	<button onclick="buttonNew_Clicked();">New</button>
-	<label>Load:</label>
-	<input id="inputTarFileToLoad" type="file" onchange="inputTarFileToLoad_Change(event);"/>
-	<br />
+	<div>
+		<label>TAR File:</label>
+		<button onclick="buttonNew_Clicked();">New</button>
+		<label>Load:</label>
+		<input
+			id="inputTarFileToLoad"
+			type="file"
+			onchange="inputTarFileToLoad_Change(event);"
+		/>
+	</div>
 
 	<div id="divTarFile"></div>
-	<br />
 
-	<label>File to Add to TAR:</label>
-	<input id="inputFileToAddToTar" type="file" />
-	<label>Directory to Add File to:</label>
-	<select id="selectDirectoryToAddFileTo"></select>
-	<button id="buttonAddFileToTar" onclick="buttonAddFileToTar_Clicked(event);">Add File</button>
-	<br />
+	<div>
+		<label>File to Add to TAR:</label>
+		<input id="inputFileToAddToTar" type="file" />
+		<label>Directory to Add File to:</label>
+		<select id="selectDirectoryToAddFileTo"></select>
+		<button
+			id="buttonAddFileToTar"
+			onclick="buttonAddFileToTar_Clicked(event);"
+		>
+			Add File
+		</button>
+	</div>
 
-	<label>Directory to Add to TAR:</label>
-	<input id="inputDirectoryToAddToTar" />
-	<button id="buttonAddDirectoryToTar" onclick="buttonAddDirectoryToTar_Clicked();">Add Directory</button>
-	<br />
+	<div>
+		<label>Directory to Add to TAR:</label>
+		<input id="inputDirectoryToAddToTar" />
+		<button
+			id="buttonAddDirectoryToTar"
+			onclick="buttonAddDirectoryToTar_Clicked();"
+		>
+			Add Directory
+		</button>
+	</div>
 
-	<label>Filename to Download TAR As:</label>
-	<input id="inputFileNameToSaveAs" value="Out.tar"></input>
-	<button id="buttonSaveAsTar" onclick="buttonSaveAsTar_Clicked();">Download TAR</button>
-	<br />
+	<div>
+		<label>Filename to Download TAR As:</label>
+		<input id="inputFileNameToSaveAs" value="Out.tar"></input>
+		<button
+			id="buttonSaveAsTar"
+			onclick="buttonSaveAsTar_Clicked();"
+		>
+			Download TAR
+		</button>
+	</div>
 </div>
 </div>
 
