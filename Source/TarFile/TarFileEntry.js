@@ -10,10 +10,16 @@ var ThisCouldBeBetter;
             }
             // methods
             // static methods
+            static directoryFromName(directoryName) {
+                return TarFileEntry.directoryNew(directoryName);
+            }
             static directoryNew(directoryName) {
                 var header = TarFileExplorer.TarFileEntryHeader.directoryNew(directoryName);
                 var entry = new TarFileEntry(header, new Array());
                 return entry;
+            }
+            static fileFromNameAndBytes(fileName, fileContentsAsBytes) {
+                return TarFileEntry.fileFromNameAndBytes(fileName, fileContentsAsBytes);
             }
             static fileNew(fileName, fileContentsAsBytes) {
                 var header = TarFileExplorer.TarFileEntryHeader.fileNew(fileName, fileContentsAsBytes);

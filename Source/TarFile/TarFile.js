@@ -9,7 +9,10 @@ var ThisCouldBeBetter;
                 this.entries = entries;
             }
             // static methods
-            static fromBytes(fileName, bytes) {
+            static fromName(fileName) {
+                return new TarFile(fileName, new Array());
+            }
+            static fromNameAndBytes(fileName, bytes) {
                 var reader = new TarFileExplorer.ByteStream(bytes);
                 var entries = new Array();
                 var chunkSize = TarFile.ChunkSize;
@@ -39,9 +42,6 @@ var ThisCouldBeBetter;
                 returnValue.consolidateLongPathEntries();
                 return returnValue;
             }
-            static create(fileName) {
-                return new TarFile(fileName, new Array());
-            }
             // instance methods
             consolidateLongPathEntries() {
                 // TAR file entries with paths longer than 99 chars require cheating,
@@ -66,7 +66,8 @@ var ThisCouldBeBetter;
                 TarFileExplorer.FileHelper.saveBytesAsFile(thisAsBytes, fileNameToSaveAs);
             }
             entriesForDirectories() {
-                return this.entries.filter(x => x.header.typeFlag.name == TarFileExplorer.TarFileTypeFlag.Instances().Directory.name);
+                var flags = TarFileExplorer.TarFileTypeFlag.Instances();
+                return this.entries.filter(x => x.header.typeFlag.name == flags.Directory.name);
             }
             toBytes() {
                 this.toBytes_PrependLongPathEntriesAsNeeded();

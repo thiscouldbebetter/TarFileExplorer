@@ -6,7 +6,11 @@ namespace ThisCouldBeBetter.TarFileExplorer
 		header: TarFileEntryHeader;
 		dataAsBytes: number[];
 
-		constructor(header: TarFileEntryHeader, dataAsBytes: number[])
+		constructor
+		(
+			header: TarFileEntryHeader,
+			dataAsBytes: number[]
+		)
 		{
 			this.header = header;
 			this.dataAsBytes = dataAsBytes;
@@ -15,6 +19,11 @@ namespace ThisCouldBeBetter.TarFileExplorer
 		// methods
 
 		// static methods
+
+		static directoryFromName(directoryName: string): TarFileEntry
+		{
+			return TarFileEntry.directoryNew(directoryName);
+		}
 
 		static directoryNew(directoryName: string): TarFileEntry
 		{
@@ -25,7 +34,20 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			return entry;
 		}
 
-		static fileNew(fileName: string, fileContentsAsBytes: number[]): TarFileEntry
+		static fileFromNameAndBytes
+		(
+			fileName: string,
+			fileContentsAsBytes: number[]
+		): TarFileEntry
+		{
+			return TarFileEntry.fileFromNameAndBytes(fileName, fileContentsAsBytes);
+		}
+
+		static fileNew
+		(
+			fileName: string,
+			fileContentsAsBytes: number[]
+		): TarFileEntry
 		{
 			var header = TarFileEntryHeader.fileNew(fileName, fileContentsAsBytes);
 

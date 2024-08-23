@@ -18,7 +18,15 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		// static methods
 
-		static fromBytes(fileName: string, bytes: number[]): TarFile
+		static fromName(fileName: string): TarFile
+		{
+			return new TarFile
+			(
+				fileName, new Array<TarFileEntry>()
+			);
+		}
+
+		static fromNameAndBytes(fileName: string, bytes: number[]): TarFile
 		{
 			var reader = new ByteStream(bytes);
 
@@ -69,21 +77,14 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			return returnValue;
 		}
 
-		static create(fileName: string): TarFile
-		{
-			return new TarFile
-			(
-				fileName, new Array<TarFileEntry>()
-			);
-		}
-
 		// instance methods
 
 		consolidateLongPathEntries(): void
 		{
 			// TAR file entries with paths longer than 99 chars require cheating,
 			// by prepending them with a entry of type "L" whose data contains the path.
-			var typeFlagLongPathName = TarFileTypeFlag.Instances().LongFilePath.name;
+			var typeFlagLongPathName =
+				TarFileTypeFlag.Instances().LongFilePath.name;
 			var entries = this.entries;
 			for (var i = 0; i < entries.length; i++)
 			{
@@ -120,9 +121,10 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		entriesForDirectories(): TarFileEntry[]
 		{
+			var flags = TarFileTypeFlag.Instances();
 			return this.entries.filter
 			(
-				x => x.header.typeFlag.name == TarFileTypeFlag.Instances().Directory.name
+				x => x.header.typeFlag.name == flags.Directory.name
 			);
 		}
 
@@ -176,7 +178,8 @@ namespace ThisCouldBeBetter.TarFileExplorer
 				var entryFileName = entryHeader.fileName;
 				if (entryFileName.length > maxLength)
 				{
-					var entryFileNameAsBytes = entryFileName.split("").map(x => x.charCodeAt(0));
+					var entryFileNameAsBytes =
+						entryFileName.split("").map(x => x.charCodeAt(0));
 					var entryContainingLongPathToPrepend = TarFileEntry.fileNew
 					(
 						typeFlagLongPath.name, entryFileNameAsBytes

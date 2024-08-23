@@ -28,13 +28,13 @@ var ThisCouldBeBetter;
                 var unixEpoch = new Date(1970, 1, 1);
                 var millisecondsSinceUnixEpoch = now.getTime() - unixEpoch.getTime();
                 var secondsSinceUnixEpoch = Math.floor(millisecondsSinceUnixEpoch / 1000);
-                var secondsSinceUnixEpochAsStringOctal = StringHelper.padStringRightToLengthWithChar(secondsSinceUnixEpoch.toString(8), 12, "\0");
+                var secondsSinceUnixEpochAsStringOctal = secondsSinceUnixEpoch.toString(8).padEnd(12, "\0");
                 var timeModifiedInUnixFormat = new Array();
                 for (var i = 0; i < secondsSinceUnixEpochAsStringOctal.length; i++) {
                     var digitAsASCIICode = secondsSinceUnixEpochAsStringOctal.charCodeAt(i);
                     timeModifiedInUnixFormat.push(digitAsASCIICode);
                 }
-                var returnValue = new TarFileEntryHeader(StringHelper.padStringRightToLengthWithChar("", 100, "\0"), // fileName
+                var returnValue = new TarFileEntryHeader("".padEnd(100, "\0"), // fileName
                 "0100777", // fileMode
                 "0000000", // userIDOfOwner
                 "0000000", // userIDOfGroup
@@ -120,8 +120,8 @@ var ThisCouldBeBetter;
             toBytes() {
                 var headerAsBytes = new Array();
                 var writer = new TarFileExplorer.ByteStream(headerAsBytes);
-                var fileSizeInBytesAsStringOctal = StringHelper.padStringLeftToLengthWithChar(this.fileSizeInBytes.toString(8) + "\0", 12, "0");
-                var checksumAsStringOctal = StringHelper.padStringLeftToLengthWithChar(this.checksum.toString(8) + "\0 ", 8, "0");
+                var fileSizeInBytesAsStringOctal = (this.fileSizeInBytes.toString(8) + "\0").padStart(12, "0");
+                var checksumAsStringOctal = (this.checksum.toString(8) + "\0").padStart(8, "0");
                 writer.writeString(this.fileName, 100);
                 writer.writeString(this.fileMode, 8);
                 writer.writeString(this.userIDOfOwner, 8);
@@ -138,7 +138,7 @@ var ThisCouldBeBetter;
                 writer.writeString(this.deviceNumberMajor, 8);
                 writer.writeString(this.deviceNumberMinor, 8);
                 writer.writeString(this.filenamePrefix, 155);
-                writer.writeString(StringHelper.padStringRightToLengthWithChar("", 12, "\0"), 12); // reserved
+                writer.writeString("".padEnd(12, "\0"), 12); // reserved
                 return headerAsBytes;
             }
             ;
