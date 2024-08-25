@@ -149,7 +149,7 @@ function inputTarFileToLoad_Change(event)
 
 function inputTarFileToLoad_Change2(fileName, fileAsBytes)
 {
-	var tarFile = TarFile.fromBytes(fileName, fileAsBytes);
+	var tarFile = TarFile.fromNameAndBytes(fileName, fileAsBytes);
 
 	globals.tarFile = tarFile;
 
