@@ -19,7 +19,7 @@ var ThisCouldBeBetter;
                 return entry;
             }
             static fileFromNameAndBytes(fileName, fileContentsAsBytes) {
-                return TarFileEntry.fileFromNameAndBytes(fileName, fileContentsAsBytes);
+                return TarFileEntry.fileNew(fileName, fileContentsAsBytes);
             }
             static fileNew(fileName, fileContentsAsBytes) {
                 var header = TarFileExplorer.TarFileEntryHeader.fileNew(fileName, fileContentsAsBytes);

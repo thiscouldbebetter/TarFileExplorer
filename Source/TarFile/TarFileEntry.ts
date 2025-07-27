@@ -40,7 +40,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			fileContentsAsBytes: number[]
 		): TarFileEntry
 		{
-			return TarFileEntry.fileFromNameAndBytes(fileName, fileContentsAsBytes);
+			return TarFileEntry.fileNew(fileName, fileContentsAsBytes);
 		}
 
 		static fileNew
