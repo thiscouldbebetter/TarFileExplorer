@@ -18,14 +18,6 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		// static methods
 
-		static fromNameAndEntries
-		(
-			fileName: string, entries: TarFileEntry[]
-		): TarFile
-		{
-			return new TarFile(fileName, entries);
-		}
-
 		static fromName(fileName: string): TarFile
 		{
 			return new TarFile
@@ -85,6 +77,26 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			returnValue.consolidateLongPathEntries();
 
 			return returnValue;
+		}
+
+		static fromNameAndEntries
+		(
+			fileName: string, entries: TarFileEntry[]
+		): TarFile
+		{
+			return new TarFile(fileName, entries);
+		}
+
+		static fromNameAndEntriesAsFileNameByteArrayPairs
+		(
+			fileName: string,
+			entriesAsFileNameByteArrayPairs: any[][]
+		): TarFile
+		{
+			var entries =
+				entriesAsFileNameByteArrayPairs
+					.map(x => TarFileEntry.fileFromNameAndBytes(x[0], x[1]) );
+			return new TarFile(fileName, entries);
 		}
 
 		// instance methods

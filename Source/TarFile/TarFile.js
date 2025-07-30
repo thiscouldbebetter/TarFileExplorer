@@ -9,9 +9,6 @@ var ThisCouldBeBetter;
                 this.entries = entries;
             }
             // static methods
-            static fromNameAndEntries(fileName, entries) {
-                return new TarFile(fileName, entries);
-            }
             static fromName(fileName) {
                 return new TarFile(fileName, []);
             }
@@ -45,6 +42,14 @@ var ThisCouldBeBetter;
                 var returnValue = new TarFile(fileName, entries);
                 returnValue.consolidateLongPathEntries();
                 return returnValue;
+            }
+            static fromNameAndEntries(fileName, entries) {
+                return new TarFile(fileName, entries);
+            }
+            static fromNameAndEntriesAsFileNameByteArrayPairs(fileName, entriesAsFileNameByteArrayPairs) {
+                var entries = entriesAsFileNameByteArrayPairs
+                    .map(x => TarFileExplorer.TarFileEntry.fileFromNameAndBytes(x[0], x[1]));
+                return new TarFile(fileName, entries);
             }
             // instance methods
             consolidateLongPathEntries() {
