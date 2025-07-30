@@ -47,16 +47,19 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		constructor()
 		{
-			this.Normal 		= new TarFileTypeFlag("0", "Normal");
-			this.HardLink 		= new TarFileTypeFlag("1", "Hard Link");
-			this.SymbolicLink 	= new TarFileTypeFlag("2", "Symbolic Link");
-			this.CharacterSpecial 	= new TarFileTypeFlag("3", "Character Special");
-			this.BlockSpecial 	= new TarFileTypeFlag("4", "Block Special");
-			this.Directory		= new TarFileTypeFlag("5", "Directory");
-			this.FIFO			= new TarFileTypeFlag("6", "FIFO");
-			this.ContiguousFile = new TarFileTypeFlag("7", "Contiguous File");
+			var tftf = (id: string, name: string) =>
+				new TarFileTypeFlag(id, name);
 
-			this.LongFilePath 	= new TarFileTypeFlag("L", "././@LongLink");
+			this.Normal 			= tftf("0", "Normal");
+			this.HardLink 			= tftf("1", "Hard Link");
+			this.SymbolicLink 		= tftf("2", "Symbolic Link");
+			this.CharacterSpecial 	= tftf("3", "Character Special");
+			this.BlockSpecial 		= tftf("4", "Block Special");
+			this.Directory			= tftf("5", "Directory");
+			this.FIFO				= tftf("6", "FIFO");
+			this.ContiguousFile 	= tftf("7", "Contiguous File");
+
+			this.LongFilePath 		= tftf("L", "././@LongLink");
 
 			// Additional types not implemented:
 			// 'g' - global extended header with meta data (POSIX.1-2001)
@@ -77,12 +80,10 @@ namespace ThisCouldBeBetter.TarFileExplorer
 				this.LongFilePath,
 			];
 
-			this._AllById = new Map<string, TarFileTypeFlag>()
-			for (var i = 0; i < this._All.length; i++)
-			{
-				var flag = this._All[i];
-				this._AllById.set(flag.id, flag);
-			}
+			this._AllById = new Map<string, TarFileTypeFlag>
+			(
+				this._All.map(x => [x.id, x] )
+			);
 		}
 	}
 }

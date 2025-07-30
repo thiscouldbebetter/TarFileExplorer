@@ -9,8 +9,11 @@ var ThisCouldBeBetter;
                 this.entries = entries;
             }
             // static methods
+            static fromNameAndEntries(fileName, entries) {
+                return new TarFile(fileName, entries);
+            }
             static fromName(fileName) {
-                return new TarFile(fileName, new Array());
+                return new TarFile(fileName, []);
             }
             static fromNameAndBytes(fileName, bytes) {
                 var reader = new TarFileExplorer.ByteStream(bytes);
@@ -34,7 +37,8 @@ var ThisCouldBeBetter;
                     }
                     else {
                         numberOfConsecutiveZeroChunks = 0;
-                        var entry = TarFileExplorer.TarFileEntry.fromBytes(chunkAsBytes, reader);
+                        var entry = TarFileExplorer.TarFileEntry
+                            .fromBytesAndByteStream(chunkAsBytes, reader);
                         entries.push(entry);
                     }
                 }
@@ -113,18 +117,6 @@ var ThisCouldBeBetter;
                         i++;
                     }
                 }
-            }
-            // strings
-            toString() {
-                var newline = "\n";
-                var returnValue = "[TarFile]" + newline;
-                for (var i = 0; i < this.entries.length; i++) {
-                    var entry = this.entries[i];
-                    var entryAsString = entry.toString();
-                    returnValue += entryAsString;
-                }
-                returnValue += "[/TarFile]" + newline;
-                return returnValue;
             }
         }
         // constants

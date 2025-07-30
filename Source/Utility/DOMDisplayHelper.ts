@@ -1,9 +1,9 @@
 
 namespace ThisCouldBeBetter.TarFileExplorer
 {
-	export class DOMDisplayHelper
+	export class DomDisplayHelper
 	{
-		static tarFileEntryToDOMElement(tarFileEntry: TarFileEntry)
+		static tarFileEntryToDomElement(tarFileEntry: TarFileEntry)
 		{
 			var d = document;
 
@@ -44,8 +44,13 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			buttonDelete.onclick = () =>
 			{
 				var tarFile = Globals.Instance.tarFile;
-				ArrayHelper.removeElementFromArray(tarFileEntry, tarFile.entries);
-				DOMDisplayHelper.divTarFileRefresh(); // hack - ui event handler
+				var entries = tarFile.entries;
+				entries.splice
+				(
+					entries.indexOf(tarFileEntry),
+					1
+				);
+				DomDisplayHelper.divTarFileRefresh(); // hack - ui event handler
 			}
 			td.appendChild(buttonDelete);
 
@@ -64,23 +69,19 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			returnValue.appendChild(pFileName);
 
 			var tableEntries = d.createElement("table");
-			tableEntries.style.border = "1px solid";
 
 			var thead = d.createElement("thead");
 
 			var th = d.createElement("th");
 			th.innerHTML = "File Name";
-			th.style.border = "1px solid";
 			thead.appendChild(th);
 
 			var th = d.createElement("th");
 			th.innerHTML = "Type";
-			th.style.border = "1px solid";
 			thead.appendChild(th);
 
 			th = d.createElement("th");
 			th.innerHTML = "Size in Bytes";
-			th.style.border = "1px solid";
 			thead.appendChild(th);
 
 			tableEntries.appendChild(thead);
@@ -88,7 +89,8 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			for (var i = 0; i < tarFile.entries.length; i++)
 			{
 				var entry = tarFile.entries[i];
-				var domElementForEntry = DOMDisplayHelper.tarFileEntryToDOMElement(entry);
+				var domElementForEntry =
+					this.tarFileEntryToDomElement(entry);
 				tableEntries.appendChild(domElementForEntry);
 			}
 
@@ -101,19 +103,20 @@ namespace ThisCouldBeBetter.TarFileExplorer
 		{
 			// hack - This should perhaps be refactored.
 
+			var d = document;
+
 			var tarFile = Globals.Instance.tarFile;
-			var tarFileAsDOMElement = DOMDisplayHelper.tarFileToDOMElement(tarFile);
+			var tarFileAsDOMElement =
+				DomDisplayHelper.tarFileToDOMElement(tarFile);
 			var divTarFile = document.getElementById("divTarFile");
 			divTarFile.innerHTML = "";
 			divTarFile.appendChild(tarFileAsDOMElement);
 
-			var selectDirectoryToAddFileTo = document.getElementById
-			(
-				"selectDirectoryToAddFileTo"
-			);
+			var selectDirectoryToAddFileTo =
+				d.getElementById("selectDirectoryToAddFileTo");
 			selectDirectoryToAddFileTo.innerHTML = "";
 
-			var optionRoot = document.createElement("option");
+			var optionRoot = d.createElement("option");
 			optionRoot.innerHTML = "[root]";
 			selectDirectoryToAddFileTo.appendChild(optionRoot);
 
@@ -121,7 +124,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			for (var i = 0; i < entriesForDirectories.length; i++)
 			{
 				var entry = entriesForDirectories[i];
-				var option = document.createElement("option");
+				var option = d.createElement("option");
 				option.innerHTML = entry.header.fileName;
 				selectDirectoryToAddFileTo.appendChild(option);
 			}

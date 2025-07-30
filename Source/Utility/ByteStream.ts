@@ -5,26 +5,23 @@ namespace ThisCouldBeBetter.TarFileExplorer
 	{
 		bytes: number[];
 
-		byteIndexCurrent: number;
+		byteCurrentIndex: number;
 
 		constructor(bytes: number[])
 		{
 			this.bytes = bytes;
 
-			this.byteIndexCurrent = 0;
+			this.byteCurrentIndex = 0;
 		}
 
-		// constants
-
-		static BitsPerByte = 8;
-		static BitsPerByteTimesTwo = ByteStream.BitsPerByte * 2;
-		static BitsPerByteTimesThree = ByteStream.BitsPerByte * 3;
-
-		// instance methods
+		static fromBytes(bytes: number[]): ByteStream
+		{
+			return new ByteStream(bytes);
+		}
 
 		hasMoreBytes(): boolean
 		{
-			return (this.byteIndexCurrent < this.bytes.length);
+			return (this.byteCurrentIndex < this.bytes.length);
 		}
 
 		readBytes(numberOfBytesToRead: number): number[]
@@ -41,14 +38,14 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		readByte(): number
 		{
-			var returnValue = this.bytes[this.byteIndexCurrent];
+			var returnValue = this.bytes[this.byteCurrentIndex];
 
-			this.byteIndexCurrent++;
+			this.byteCurrentIndex++;
 
 			return returnValue;
 		}
 
-		readString(lengthOfString: number)
+		readString(lengthOfString: number): string
 		{
 			var returnValue = "";
 
@@ -66,24 +63,28 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			return returnValue;
 		}
 
-		writeBytes(bytesToWrite: number[])
+		writeBytes(bytesToWrite: number[]): ByteStream
 		{
 			for (var b = 0; b < bytesToWrite.length; b++)
 			{
 				this.bytes.push(bytesToWrite[b]);
 			}
 
-			this.byteIndexCurrent = this.bytes.length;
+			this.byteCurrentIndex = this.bytes.length;
+
+			return this;
 		}
 
-		writeByte(byteToWrite: number)
+		writeByte(byteToWrite: number): ByteStream
 		{
 			this.bytes.push(byteToWrite);
 
-			this.byteIndexCurrent++;
+			this.byteCurrentIndex++;
+
+			return this;
 		}
 
-		writeString(stringToWrite: string, lengthPadded: number)
+		writeString(stringToWrite: string, lengthPadded: number): ByteStream
 		{
 			for (var i = 0; i < stringToWrite.length; i++)
 			{
@@ -91,11 +92,14 @@ namespace ThisCouldBeBetter.TarFileExplorer
 				this.writeByte(charAsByte);
 			}
 
-			var numberOfPaddingChars = lengthPadded - stringToWrite.length;
+			var numberOfPaddingChars =
+				lengthPadded - stringToWrite.length;
 			for (var i = 0; i < numberOfPaddingChars; i++)
 			{
 				this.writeByte(0);
 			}
+
+			return this;
 		}
 	}
 }

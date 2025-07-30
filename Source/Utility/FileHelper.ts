@@ -3,7 +3,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 {
 	export class FileHelper
 	{
-		static loadFileAsBytes(fileToLoad: any, callback: any)
+		static loadFileAsBytes(fileToLoad: any, callback: any): void
 		{
 			var fileReader = new FileReader();
 			fileReader.onload = (fileLoadedEvent: any) =>
@@ -18,7 +18,11 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			fileReader.readAsBinaryString(fileToLoad);
 		}
 
-		static loadFileAsText(fileToLoad: any, callback: any)
+		static loadFileAsText
+		(
+			fileToLoad: any,
+			callback: (name: string, text: string) => void
+		): void
 		{
 			var fileReader = new FileReader();
 			fileReader.onload = (fileLoadedEvent: any) =>
@@ -29,7 +33,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			fileReader.readAsText(fileToLoad);
 		}
 
-		static saveBytesAsFile(bytesToWrite: number[], fileNameToSaveAs: string)
+		static saveBytesAsFile(bytesToWrite: number[], fileNameToSaveAs: string): void
 		{
 			var bytesToWriteAsArrayBuffer = new ArrayBuffer(bytesToWrite.length);
 			var bytesToWriteAsUIntArray = new Uint8Array(bytesToWriteAsArrayBuffer);
@@ -46,14 +50,14 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 			var downloadLink = document.createElement("a");
 			downloadLink.download = fileNameToSaveAs;
-			downloadLink.href = window.URL.createObjectURL(bytesToWriteAsBlob);
+			downloadLink.href = URL.createObjectURL(bytesToWriteAsBlob);
 			downloadLink.click();
 		}
 
-		static saveTextAsFile(textToSave: string, fileNameToSaveAs: string)
+		static saveTextAsFile(textToSave: string, fileNameToSaveAs: string): void
 		{
 			var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
-			var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+			var textToSaveAsURL = URL.createObjectURL(textToSaveAsBlob);
 
 			var downloadLink = document.createElement("a");
 			downloadLink.download = fileNameToSaveAs;

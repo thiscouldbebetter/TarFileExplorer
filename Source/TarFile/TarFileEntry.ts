@@ -20,6 +20,15 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		// static methods
 
+		static fromHeaderAndBytes
+		(
+			header: TarFileEntryHeader,
+			dataAsBytes: number[]
+		): TarFileEntry
+		{
+			return new TarFileEntry(header, dataAsBytes);
+		}
+
 		static directoryFromName(directoryName: string): TarFileEntry
 		{
 			return TarFileEntry.directoryNew(directoryName);
@@ -56,7 +65,11 @@ namespace ThisCouldBeBetter.TarFileExplorer
 			return entry;
 		}
 
-		static fromBytes(chunkAsBytes: number[], reader: ByteStream): TarFileEntry
+		static fromBytesAndByteStream
+		(
+			chunkAsBytes: number[],
+			reader: ByteStream
+		): TarFileEntry
 		{
 			var chunkSize = TarFile.ChunkSize;
 
@@ -125,7 +138,7 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		remove(event: any): void
 		{
-			alert("Not yet implemented!"); // todo
+			throw new Error("Not yet implemented!"); // todo
 		}
 
 		toBytes(): number[]
@@ -160,31 +173,5 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 			return entryAsBytes;
 		}
-
-		// strings
-
-		toString(): string
-		{
-			var newline = "\n";
-
-			var headerAsString = this.header.toString();
-
-			var dataAsHexadecimalString = ByteHelper.bytesToStringHexadecimal
-			(
-				this.dataAsBytes
-			);
-
-			var returnValue =
-				"[TarFileEntry]" + newline
-				+ headerAsString
-				+ "[Data]"
-				+ dataAsHexadecimalString
-				+ "[/Data]" + newline
-				+ "[/TarFileEntry]"
-				+ newline;
-
-			return returnValue;
-		}
-
 	}
 }

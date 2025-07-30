@@ -10,6 +10,9 @@ var ThisCouldBeBetter;
             }
             // methods
             // static methods
+            static fromHeaderAndBytes(header, dataAsBytes) {
+                return new TarFileEntry(header, dataAsBytes);
+            }
             static directoryFromName(directoryName) {
                 return TarFileEntry.directoryNew(directoryName);
             }
@@ -26,7 +29,7 @@ var ThisCouldBeBetter;
                 var entry = new TarFileEntry(header, fileContentsAsBytes);
                 return entry;
             }
-            static fromBytes(chunkAsBytes, reader) {
+            static fromBytesAndByteStream(chunkAsBytes, reader) {
                 var chunkSize = TarFileExplorer.TarFile.ChunkSize;
                 var header = TarFileExplorer.TarFileEntryHeader.fromBytes(chunkAsBytes);
                 var sizeOfDataEntryInBytesUnpadded = header.fileSizeInBytes;
@@ -51,7 +54,7 @@ var ThisCouldBeBetter;
                 TarFileExplorer.FileHelper.saveBytesAsFile(this.dataAsBytes, this.header.fileName);
             }
             remove(event) {
-                alert("Not yet implemented!"); // todo
+                throw new Error("Not yet implemented!"); // todo
             }
             toBytes() {
                 var entryAsBytes = new Array();
@@ -68,20 +71,6 @@ var ThisCouldBeBetter;
                     entryAsBytes.push(0);
                 }
                 return entryAsBytes;
-            }
-            // strings
-            toString() {
-                var newline = "\n";
-                var headerAsString = this.header.toString();
-                var dataAsHexadecimalString = TarFileExplorer.ByteHelper.bytesToStringHexadecimal(this.dataAsBytes);
-                var returnValue = "[TarFileEntry]" + newline
-                    + headerAsString
-                    + "[Data]"
-                    + dataAsHexadecimalString
-                    + "[/Data]" + newline
-                    + "[/TarFileEntry]"
-                    + newline;
-                return returnValue;
             }
         }
         TarFileExplorer.TarFileEntry = TarFileEntry;

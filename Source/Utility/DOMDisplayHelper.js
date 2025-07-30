@@ -3,8 +3,8 @@ var ThisCouldBeBetter;
 (function (ThisCouldBeBetter) {
     var TarFileExplorer;
     (function (TarFileExplorer) {
-        class DOMDisplayHelper {
-            static tarFileEntryToDOMElement(tarFileEntry) {
+        class DomDisplayHelper {
+            static tarFileEntryToDomElement(tarFileEntry) {
                 var d = document;
                 var returnValue = d.createElement("tr");
                 var header = tarFileEntry.header;
@@ -33,8 +33,9 @@ var ThisCouldBeBetter;
                 buttonDelete.innerHTML = "Delete";
                 buttonDelete.onclick = () => {
                     var tarFile = TarFileExplorer.Globals.Instance.tarFile;
-                    TarFileExplorer.ArrayHelper.removeElementFromArray(tarFileEntry, tarFile.entries);
-                    DOMDisplayHelper.divTarFileRefresh(); // hack - ui event handler
+                    var entries = tarFile.entries;
+                    entries.splice(entries.indexOf(tarFileEntry), 1);
+                    DomDisplayHelper.divTarFileRefresh(); // hack - ui event handler
                 };
                 td.appendChild(buttonDelete);
                 returnValue.appendChild(td);
@@ -47,24 +48,20 @@ var ThisCouldBeBetter;
                 pFileName.innerHTML = tarFile.fileName;
                 returnValue.appendChild(pFileName);
                 var tableEntries = d.createElement("table");
-                tableEntries.style.border = "1px solid";
                 var thead = d.createElement("thead");
                 var th = d.createElement("th");
                 th.innerHTML = "File Name";
-                th.style.border = "1px solid";
                 thead.appendChild(th);
                 var th = d.createElement("th");
                 th.innerHTML = "Type";
-                th.style.border = "1px solid";
                 thead.appendChild(th);
                 th = d.createElement("th");
                 th.innerHTML = "Size in Bytes";
-                th.style.border = "1px solid";
                 thead.appendChild(th);
                 tableEntries.appendChild(thead);
                 for (var i = 0; i < tarFile.entries.length; i++) {
                     var entry = tarFile.entries[i];
-                    var domElementForEntry = DOMDisplayHelper.tarFileEntryToDOMElement(entry);
+                    var domElementForEntry = this.tarFileEntryToDomElement(entry);
                     tableEntries.appendChild(domElementForEntry);
                 }
                 returnValue.appendChild(tableEntries);
@@ -72,25 +69,26 @@ var ThisCouldBeBetter;
             }
             static divTarFileRefresh() {
                 // hack - This should perhaps be refactored.
+                var d = document;
                 var tarFile = TarFileExplorer.Globals.Instance.tarFile;
-                var tarFileAsDOMElement = DOMDisplayHelper.tarFileToDOMElement(tarFile);
+                var tarFileAsDOMElement = DomDisplayHelper.tarFileToDOMElement(tarFile);
                 var divTarFile = document.getElementById("divTarFile");
                 divTarFile.innerHTML = "";
                 divTarFile.appendChild(tarFileAsDOMElement);
-                var selectDirectoryToAddFileTo = document.getElementById("selectDirectoryToAddFileTo");
+                var selectDirectoryToAddFileTo = d.getElementById("selectDirectoryToAddFileTo");
                 selectDirectoryToAddFileTo.innerHTML = "";
-                var optionRoot = document.createElement("option");
+                var optionRoot = d.createElement("option");
                 optionRoot.innerHTML = "[root]";
                 selectDirectoryToAddFileTo.appendChild(optionRoot);
                 var entriesForDirectories = tarFile.entriesForDirectories();
                 for (var i = 0; i < entriesForDirectories.length; i++) {
                     var entry = entriesForDirectories[i];
-                    var option = document.createElement("option");
+                    var option = d.createElement("option");
                     option.innerHTML = entry.header.fileName;
                     selectDirectoryToAddFileTo.appendChild(option);
                 }
             }
         }
-        TarFileExplorer.DOMDisplayHelper = DOMDisplayHelper;
+        TarFileExplorer.DomDisplayHelper = DomDisplayHelper;
     })(TarFileExplorer = ThisCouldBeBetter.TarFileExplorer || (ThisCouldBeBetter.TarFileExplorer = {}));
 })(ThisCouldBeBetter || (ThisCouldBeBetter = {}));

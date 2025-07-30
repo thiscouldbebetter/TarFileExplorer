@@ -1,157 +1,160 @@
 
 var tarFileExplorer = ThisCouldBeBetter.TarFileExplorer;
 var globals = tarFileExplorer.Globals.Instance;
-var DOMDisplayHelper = tarFileExplorer.DOMDisplayHelper;
+var DomDisplayHelper = tarFileExplorer.DomDisplayHelper;
 var FileHelper = tarFileExplorer.FileHelper;
 var TarFile = tarFileExplorer.TarFile;
 var TarFileEntry = tarFileExplorer.TarFileEntry;
 var TarFileEntryHeader = tarFileExplorer.TarFileEntryHeader;
 var TarFileTypeFlag = tarFileExplorer.TarFileTypeFlag;
 
-function buttonAddDirectoryToTar_Clicked()
+class UiEventHandler
 {
-	var tarFile = globals.tarFile;
-	if (tarFile == null)
+	static buttonAddDirectoryToTar_Clicked()
 	{
-		alert("No TAR file created or loaded yet!");
-	}
-	else
-	{
-		var inputDirectoryToAddToTar =
-			document.getElementById("inputDirectoryToAddToTar");
-		var directoryToAddToTar = inputDirectoryToAddToTar.value;
-		if (directoryToAddToTar != "")
+		var tarFile = globals.tarFile;
+		if (tarFile == null)
 		{
-			var delimiter = "/";
-			if (directoryToAddToTar.lastIndexOf(delimiter) < directoryToAddToTar.length - 1)
+			alert("No TAR file created or loaded yet!");
+		}
+		else
+		{
+			var inputDirectoryToAddToTar =
+				document.getElementById("inputDirectoryToAddToTar");
+			var directoryToAddToTar = inputDirectoryToAddToTar.value;
+			if (directoryToAddToTar != "")
 			{
-				directoryToAddToTar += delimiter;
+				var delimiter = "/";
+				if (directoryToAddToTar.lastIndexOf(delimiter) < directoryToAddToTar.length - 1)
+				{
+					directoryToAddToTar += delimiter;
+				}
+
+				var entryForDirectory = TarFileEntry.directoryNew(directoryToAddToTar);
+
+				tarFile.entries.push(entryForDirectory);
 			}
 
-			var entryForDirectory = TarFileEntry.directoryNew(directoryToAddToTar);
-
-			tarFile.entries.push(entryForDirectory);
+			DomDisplayHelper.divTarFileRefresh();
 		}
-
-		DOMDisplayHelper.divTarFileRefresh();
 	}
-}
 
-function buttonAddFileToTar_Clicked()
-{
-	var tarFile = globals.tarFile;
-	if (tarFile == null)
+	static buttonAddFileToTar_Clicked()
 	{
-		alert("No TAR file created or loaded yet!");
+		var tarFile = globals.tarFile;
+		if (tarFile == null)
+		{
+			alert("No TAR file created or loaded yet!");
+		}
+		else
+		{
+			var inputFileToAddToTar = document.getElementById("inputFileToAddToTar");
+			var fileToLoad = inputFileToAddToTar.files[0];
+			if (fileToLoad != null)
+			{
+				FileHelper.loadFileAsBytes
+				(
+					fileToLoad,
+					buttonAddFileToTar_Clicked2 // callback
+				);
+			}
+		}
 	}
-	else
+
+	static buttonAddFileToTar_Clicked2(fileToAddName, fileToAddAsBytes)
 	{
-		var inputFileToAddToTar = document.getElementById("inputFileToAddToTar");
-		var fileToLoad = inputFileToAddToTar.files[0];
+		var selectDirectoryToAddFileTo = document.getElementById("selectDirectoryToAddFileTo");
+		var directoryToAddFileTo = selectDirectoryToAddFileTo.selectedOptions[0].text;
+		if (directoryToAddFileTo == "[root]")
+		{
+			directoryToAddFileTo = "";
+		}
+		fileToAddName = directoryToAddFileTo + fileToAddName;
+
+		var tarFile = globals.tarFile;
+
+		var tarFileEntry0 = tarFile.entries[0];
+		var headerToClone =
+		(
+			tarFileEntry0 == null
+			? TarFileEntryHeader.default()
+			: tarFileEntry0.header
+		);
+
+		var tarFileEntryHeader = new TarFileEntryHeader
+		(
+			fileToAddName,
+			headerToClone.fileMode,
+			headerToClone.userIDOfOwner,
+			headerToClone.userIDOfGroup,
+			fileToAddAsBytes.length, // fileSizeInBytes,
+			headerToClone.timeModifiedInUnixFormat, // todo
+			0, // checksum,
+			TarFileTypeFlag.Instances().Normal,
+			headerToClone.nameOfLinkedFile,
+			headerToClone.uStarIndicator,
+			headerToClone.uStarVersion,
+			headerToClone.userNameOfOwner,
+			headerToClone.groupNameOfOwner,
+			headerToClone.deviceNumberMajor,
+			headerToClone.deviceNumberMinor,
+			headerToClone.filenamePrefix
+		);
+
+		tarFileEntryHeader.checksumCalculate();
+
+		var entryForFileToAdd = new TarFileEntry
+		(
+			tarFileEntryHeader,
+			fileToAddAsBytes
+		);
+
+		tarFile.entries.push(entryForFileToAdd);
+
+		DomDisplayHelper.divTarFileRefresh();
+	}
+
+	static buttonNew_Clicked()
+	{
+		globals.tarFile = tarFileExplorer.TarFile.create("[new]");
+		DomDisplayHelper.divTarFileRefresh();
+	}
+
+	static buttonSaveAsTar_Clicked()
+	{
+		var tarFileToSave = globals.tarFile;
+		if (tarFileToSave == null)
+		{
+			alert("No TAR file created or loaded yet!");
+		}
+		else
+		{
+			var inputFileNameToSaveAs =
+				document.getElementById("inputFileNameToSaveAs");
+			var fileNameToSaveAs = inputFileNameToSaveAs.value;
+			tarFileToSave.downloadAs(fileNameToSaveAs);
+		}
+	}
+
+	static inputTarFileToLoad_Change(event)
+	{
+		var fileToLoad = event.srcElement.files[0];
 		if (fileToLoad != null)
 		{
 			FileHelper.loadFileAsBytes
 			(
 				fileToLoad,
-				buttonAddFileToTar_Clicked2 // callback
+				this.inputTarFileToLoad_Change_Loaded // callback
 			);
 		}
 	}
-}
 
-function buttonAddFileToTar_Clicked2(fileToAddName, fileToAddAsBytes)
-{
-	var selectDirectoryToAddFileTo = document.getElementById("selectDirectoryToAddFileTo");
-	var directoryToAddFileTo = selectDirectoryToAddFileTo.selectedOptions[0].text;
-	if (directoryToAddFileTo == "[root]")
+	static inputTarFileToLoad_Change_Loaded(fileName, fileAsBytes)
 	{
-		directoryToAddFileTo = "";
+		var tarFile = TarFile.fromNameAndBytes(fileName, fileAsBytes);
+
+		globals.tarFile = tarFile;
+
+		DomDisplayHelper.divTarFileRefresh();
 	}
-	fileToAddName = directoryToAddFileTo + fileToAddName;
-
-	var tarFile = globals.tarFile;
-
-	var tarFileEntry0 = tarFile.entries[0];
-	var headerToClone =
-	(
-		tarFileEntry0 == null
-		? TarFileEntryHeader.default()
-		: tarFileEntry0.header
-	);
-
-	var tarFileEntryHeader = new TarFileEntryHeader
-	(
-		fileToAddName,
-		headerToClone.fileMode,
-		headerToClone.userIDOfOwner,
-		headerToClone.userIDOfGroup,
-		fileToAddAsBytes.length, // fileSizeInBytes,
-		headerToClone.timeModifiedInUnixFormat, // todo
-		0, // checksum,
-		TarFileTypeFlag.Instances().Normal,
-		headerToClone.nameOfLinkedFile,
-		headerToClone.uStarIndicator,
-		headerToClone.uStarVersion,
-		headerToClone.userNameOfOwner,
-		headerToClone.groupNameOfOwner,
-		headerToClone.deviceNumberMajor,
-		headerToClone.deviceNumberMinor,
-		headerToClone.filenamePrefix
-	);
-
-	tarFileEntryHeader.checksumCalculate();
-
-	var entryForFileToAdd = new TarFileEntry
-	(
-		tarFileEntryHeader,
-		fileToAddAsBytes
-	);
-
-	tarFile.entries.push(entryForFileToAdd);
-
-	DOMDisplayHelper.divTarFileRefresh();
-}
-
-function buttonNew_Clicked()
-{
-	globals.tarFile = tarFileExplorer.TarFile.create("[new]");
-	DOMDisplayHelper.divTarFileRefresh();
-}
-
-function buttonSaveAsTar_Clicked()
-{
-	var tarFileToSave = globals.tarFile;
-	if (tarFileToSave == null)
-	{
-		alert("No TAR file created or loaded yet!");
-	}
-	else
-	{
-		var inputFileNameToSaveAs =
-			document.getElementById("inputFileNameToSaveAs");
-		var fileNameToSaveAs = inputFileNameToSaveAs.value;
-		tarFileToSave.downloadAs(fileNameToSaveAs);
-	}
-}
-
-function inputTarFileToLoad_Change(event)
-{
-	var fileToLoad = event.srcElement.files[0];
-	if (fileToLoad != null)
-	{
-		FileHelper.loadFileAsBytes
-		(
-			fileToLoad,
-			inputTarFileToLoad_Change2 // callback
-		);
-	}
-}
-
-function inputTarFileToLoad_Change2(fileName, fileAsBytes)
-{
-	var tarFile = TarFile.fromNameAndBytes(fileName, fileAsBytes);
-
-	globals.tarFile = tarFile;
-
-	DOMDisplayHelper.divTarFileRefresh();
 }

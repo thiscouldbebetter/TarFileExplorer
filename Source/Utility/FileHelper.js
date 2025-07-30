@@ -30,12 +30,12 @@ var ThisCouldBeBetter;
                 var bytesToWriteAsBlob = new Blob([bytesToWriteAsArrayBuffer], { type: "application/type" });
                 var downloadLink = document.createElement("a");
                 downloadLink.download = fileNameToSaveAs;
-                downloadLink.href = window.URL.createObjectURL(bytesToWriteAsBlob);
+                downloadLink.href = URL.createObjectURL(bytesToWriteAsBlob);
                 downloadLink.click();
             }
             static saveTextAsFile(textToSave, fileNameToSaveAs) {
                 var textToSaveAsBlob = new Blob([textToSave], { type: "text/plain" });
-                var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+                var textToSaveAsURL = URL.createObjectURL(textToSaveAsBlob);
                 var downloadLink = document.createElement("a");
                 downloadLink.download = fileNameToSaveAs;
                 downloadLink.href = textToSaveAsURL;

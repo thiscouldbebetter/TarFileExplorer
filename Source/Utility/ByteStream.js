@@ -6,11 +6,13 @@ var ThisCouldBeBetter;
         class ByteStream {
             constructor(bytes) {
                 this.bytes = bytes;
-                this.byteIndexCurrent = 0;
+                this.byteCurrentIndex = 0;
             }
-            // instance methods
+            static fromBytes(bytes) {
+                return new ByteStream(bytes);
+            }
             hasMoreBytes() {
-                return (this.byteIndexCurrent < this.bytes.length);
+                return (this.byteCurrentIndex < this.bytes.length);
             }
             readBytes(numberOfBytesToRead) {
                 var returnValue = new Array();
@@ -20,8 +22,8 @@ var ThisCouldBeBetter;
                 return returnValue;
             }
             readByte() {
-                var returnValue = this.bytes[this.byteIndexCurrent];
-                this.byteIndexCurrent++;
+                var returnValue = this.bytes[this.byteCurrentIndex];
+                this.byteCurrentIndex++;
                 return returnValue;
             }
             readString(lengthOfString) {
@@ -39,11 +41,13 @@ var ThisCouldBeBetter;
                 for (var b = 0; b < bytesToWrite.length; b++) {
                     this.bytes.push(bytesToWrite[b]);
                 }
-                this.byteIndexCurrent = this.bytes.length;
+                this.byteCurrentIndex = this.bytes.length;
+                return this;
             }
             writeByte(byteToWrite) {
                 this.bytes.push(byteToWrite);
-                this.byteIndexCurrent++;
+                this.byteCurrentIndex++;
+                return this;
             }
             writeString(stringToWrite, lengthPadded) {
                 for (var i = 0; i < stringToWrite.length; i++) {
@@ -54,12 +58,9 @@ var ThisCouldBeBetter;
                 for (var i = 0; i < numberOfPaddingChars; i++) {
                     this.writeByte(0);
                 }
+                return this;
             }
         }
-        // constants
-        ByteStream.BitsPerByte = 8;
-        ByteStream.BitsPerByteTimesTwo = ByteStream.BitsPerByte * 2;
-        ByteStream.BitsPerByteTimesThree = ByteStream.BitsPerByte * 3;
         TarFileExplorer.ByteStream = ByteStream;
     })(TarFileExplorer = ThisCouldBeBetter.TarFileExplorer || (ThisCouldBeBetter.TarFileExplorer = {}));
 })(ThisCouldBeBetter || (ThisCouldBeBetter = {}));

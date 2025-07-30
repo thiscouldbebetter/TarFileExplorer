@@ -1,20 +1,31 @@
 <html>
+
+<head>
+<style>
+table { border: "1px solid"; }
+th { border: "1px solid"; }
+</style>
+</head>
+
 <body>
 
 <div id="divUI">
 
 	<label><b>TAR File Explorer</b></label><br />
 
-	<p>Upload a TAR File to view and modify its contents.</p>
+	<p>
+		Upload a TAR File to view and modify its contents.
+		A sample file is provided <a href="../Samples/Demo.tar">here</a>.
+	</p>
 
 	<div>
 		<label>TAR File:</label>
-		<button onclick="buttonNew_Clicked();">New</button>
+		<button onclick="UiEventHandler.buttonNew_Clicked();">New</button>
 		<label>Load:</label>
 		<input
 			id="inputTarFileToLoad"
 			type="file"
-			onchange="inputTarFileToLoad_Change(event);"
+			onchange="UiEventHandler.inputTarFileToLoad_Change(event);"
 		/>
 	</div>
 
@@ -27,7 +38,7 @@
 		<select id="selectDirectoryToAddFileTo"></select>
 		<button
 			id="buttonAddFileToTar"
-			onclick="buttonAddFileToTar_Clicked(event);"
+			onclick="UiEventHandler.buttonAddFileToTar_Clicked(event);"
 		>
 			Add File
 		</button>
@@ -38,7 +49,7 @@
 		<input id="inputDirectoryToAddToTar" />
 		<button
 			id="buttonAddDirectoryToTar"
-			onclick="buttonAddDirectoryToTar_Clicked();"
+			onclick="UiEventHandler.buttonAddDirectoryToTar_Clicked();"
 		>
 			Add Directory
 		</button>
@@ -49,7 +60,7 @@
 		<input id="inputFileNameToSaveAs" value="Out.tar"></input>
 		<button
 			id="buttonSaveAsTar"
-			onclick="buttonSaveAsTar_Clicked();"
+			onclick="UiEventHandler.buttonSaveAsTar_Clicked();"
 		>
 			Download TAR
 		</button>
@@ -62,10 +73,9 @@
 <script type="text/javascript" src="TarFile/TarFileEntryHeader.js"></script>
 <script type="text/javascript" src="TarFile/TarFileTypeFlag.js"></script>
 
-<script type="text/javascript" src="Utility/ArrayHelper.js"></script>
 <script type="text/javascript" src="Utility/ByteHelper.js"></script>
 <script type="text/javascript" src="Utility/ByteStream.js"></script>
-<script type="text/javascript" src="Utility/DOMDisplayHelper.js"></script>
+<script type="text/javascript" src="Utility/DomDisplayHelper.js"></script>
 <script type="text/javascript" src="Utility/FileHelper.js"></script>
 
 <script type="text/javascript" src="Globals.js"></script>

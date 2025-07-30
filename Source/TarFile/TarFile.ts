@@ -3,10 +3,10 @@ namespace ThisCouldBeBetter.TarFileExplorer
 {
 	export class TarFile
 	{
-		fileName:string;
+		fileName: string;
 		entries: TarFileEntry[];
 
-		constructor(fileName:string, entries: TarFileEntry[])
+		constructor(fileName: string, entries: TarFileEntry[])
 		{
 			this.fileName = fileName;
 			this.entries = entries;
@@ -18,11 +18,19 @@ namespace ThisCouldBeBetter.TarFileExplorer
 
 		// static methods
 
+		static fromNameAndEntries
+		(
+			fileName: string, entries: TarFileEntry[]
+		): TarFile
+		{
+			return new TarFile(fileName, entries);
+		}
+
 		static fromName(fileName: string): TarFile
 		{
 			return new TarFile
 			(
-				fileName, new Array<TarFileEntry>()
+				fileName, []
 			);
 		}
 
@@ -64,7 +72,9 @@ namespace ThisCouldBeBetter.TarFileExplorer
 				{
 					numberOfConsecutiveZeroChunks = 0;
 
-					var entry = TarFileEntry.fromBytes(chunkAsBytes, reader);
+					var entry =
+						TarFileEntry
+							.fromBytesAndByteStream(chunkAsBytes, reader);
 
 					entries.push(entry);
 				}
@@ -194,26 +204,6 @@ namespace ThisCouldBeBetter.TarFileExplorer
 					i++;
 				}
 			}
-		}
-
-		// strings
-
-		toString(): string
-		{
-			var newline = "\n";
-
-			var returnValue = "[TarFile]" + newline;
-
-			for (var i = 0; i < this.entries.length; i++)
-			{
-				var entry = this.entries[i];
-				var entryAsString = entry.toString();
-				returnValue += entryAsString;
-			}
-
-			returnValue += "[/TarFile]" + newline;
-
-			return returnValue;
 		}
 	}
 }
